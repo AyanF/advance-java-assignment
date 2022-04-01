@@ -26,6 +26,10 @@ public class Party {
 		this.phone = phone;
 	}
 
+	public Party() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getPartyId() {
 		return partyId;
 	}
