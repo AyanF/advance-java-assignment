@@ -13,6 +13,10 @@ public class UserLogin {
 		this.partyId = partyId;
 	}
 
+	public UserLogin() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getUserLoginId() {
 		return userLoginId;
 	}

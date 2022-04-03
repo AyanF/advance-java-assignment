@@ -6,30 +6,31 @@ import java.sql.SQLException;
 
 public class DBConnection {
 
-	private String jdbcUrl = "jdbc:mysql://localhost:3306/userdb?userSSL=false";
+	private String jdbcUrl = "jdbc:mysql://localhost:3306/hotwaxsystem?useSSL=false";
 	private String user ="root";
 	private String pass="123456";
-	private String jdbcDriver="com.mysql.jdbc.driver";
+	private String jdbcDriver="com.mysql.cj.jdbc.Driver";
 
-	protected Connection getConnection() {
+	protected Connection getConnection() throws Exception {
 
-		Connection connection = null;
+		//Connection connection = null;
 
-		try {
+		//try {
 
 			Class.forName(jdbcDriver);
-			connection = DriverManager.getConnection(jdbcUrl,user,pass);
+			Connection connection = DriverManager.getConnection(jdbcUrl,user,pass);
 			System.out.println("Connection successful");
-		}
+			
+		//}
 
-		catch (SQLException sqlE) {
-			sqlE.printStackTrace();
-		}
+		//catch  (SQLException sqlE) {
+			//sqlE.printStackTrace();
+		//}
 
-		catch(ClassNotFoundException clE) {
-			clE.printStackTrace();
-		}
-
+		//catch(ClassNotFoundException clE) {
+			//clE.printStackTrace();
+		//}
+		System.out.println(connection);
 		return connection;
 	}
 
