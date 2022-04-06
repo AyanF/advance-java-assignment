@@ -1,6 +1,8 @@
 package DAO;
 
 import java.sql.Connection;
+import java.security.NoSuchAlgorithmException;  
+import java.security.MessageDigest;  
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,8 +22,8 @@ public class LogicalCode  {
 
 		List<Party> partyList= new ArrayList<Party>();
 		try(Connection conn = connection.getConnection();
-				PreparedStatement st = conn.prepareStatement("SELECT firstName,lastName,address,city,zip,state,country,phone FROM party ");){
-			ResultSet rs= st.executeQuery();
+				PreparedStatement st = conn.prepareStatement("SELECT firstName,lastName,address,city,zip,state,country,phone,partyId FROM party ");){
+				ResultSet rs= st.executeQuery();
 			while(rs.next()) {
 				String fname = rs.getString(1);
 				String lname = rs.getString(2);
@@ -31,7 +33,8 @@ public class LogicalCode  {
 				String state = rs.getString(6);
 				String country = rs.getString(7);
 				String phone = rs.getString(8);
-				Party partyObj = new Party(fname,lname,address,city,zip,state,country,phone);
+				int pId= rs.getInt(9);
+				Party partyObj = new Party(pId,fname,lname,address,city,zip,state,country,phone);
 				partyList.add(partyObj);
 			}
 		}
@@ -48,7 +51,6 @@ public class LogicalCode  {
 
 		try {
 			Connection conn = connection.getConnection();
-			//conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/hotwaxsystem?useSSL=false","root","123456");
 			PreparedStatement st = conn.prepareStatement("INSERT INTO party (firstName,lastName,address,city,zip,state,country,phone)" 
 					+"VALUES(?,?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
 			PreparedStatement st2= conn.prepareStatement("INSERT INTO userLogin (userLoginId,password,partyId) VALUES(?,?,?)");
@@ -82,12 +84,16 @@ public class LogicalCode  {
 	public void deleteUser(int partyId) throws SQLException {
 		
 		try(Connection conn = connection.getConnection();
-				PreparedStatement st = conn.prepareStatement("DELETE party, userlogin FROM party INNER JOIN userlogin "
-						+ "ON party.partyId = userlogin.partyId WHERE party.partyId= ?");
+				PreparedStatement st = conn.prepareStatement("DELETE FROM userlogin WHERE partyId= ?");
+				PreparedStatement st2 = conn.prepareStatement("DELETE FROM party WHERE partyId= ?");
 				){
-			st.setInt(1, partyId);
-			st.executeUpdate();
-			} catch (Exception e) {
+				st.setInt(1, partyId);
+				st2.setInt(1, partyId);
+				st.executeUpdate();
+				st2.executeUpdate();
+			} 
+			catch (Exception e) 
+			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -122,7 +128,7 @@ public class LogicalCode  {
 		
 		Party partyObj =new Party();
 		try(Connection conn = connection.getConnection();
-				PreparedStatement st = conn.prepareStatement("SELECT firstName,lastName,address,city,zip,state,country,phone FROM party WHERE firstname=? AND lastname=?");
+				PreparedStatement st = conn.prepareStatement("SELECT firstName,lastName,address,city,zip,state,country,phone,partyId FROM party WHERE firstname=? AND lastname=?");
 				){
 			st.setString(1, fname);
 			st.setString(2, lname);
@@ -137,7 +143,12 @@ public class LogicalCode  {
 				String stateU = rs.getString(6);
 				String countryU = rs.getString(7);
 				String phoneU = rs.getString(8);
-				partyObj = new Party(fnameU,lnameU,addressU,cityU,zipU,stateU,countryU,phoneU);
+				int pId= rs.getInt(9);
+				partyObj = new Party(pId,fnameU,lnameU,addressU,cityU,zipU,stateU,countryU,phoneU);
+			}
+			else
+			{
+				partyObj=null;
 			}
 			}
 		catch(SQLException sqlE) {
@@ -172,5 +183,28 @@ public class LogicalCode  {
 		}
 		
 		return status;
+	}
+	
+	public String passwordEncryption(String pass) {
+		
+		String encryptedPass=null;
+		MessageDigest m;
+		try {
+			m = MessageDigest.getInstance("MD5");
+			m.update(pass.getBytes()); 
+			byte[] bytes = m.digest();  
+		    StringBuilder s = new StringBuilder();  
+	            for(int i=0; i< bytes.length ;i++)  
+	            {  
+	                s.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));  
+	            }  
+	        encryptedPass=s.toString();
+		} 
+		catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+		
+		return encryptedPass;
 	}
 }

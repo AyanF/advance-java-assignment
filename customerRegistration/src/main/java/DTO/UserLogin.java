@@ -5,6 +5,7 @@ public class UserLogin {
 	private String userLoginId;
 	private String password;
 	private int partyId;
+	private String code;
 	
 	public UserLogin(String userLoginId, String password, int partyId) {
 		super();
@@ -34,6 +35,14 @@ public class UserLogin {
 	}
 	public void setPartyId(int partyId) {
 		this.partyId = partyId;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 	
 }
