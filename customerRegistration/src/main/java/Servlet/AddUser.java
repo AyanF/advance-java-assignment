@@ -1,16 +1,18 @@
 package Servlet;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
+import java.sql.SQLException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import DAO.LogicalCode;
+import DAO.SendEmail;
 import DTO.Party;
 import DTO.UserLogin;
 
@@ -57,7 +59,10 @@ public class AddUser extends HttpServlet {
 		String phone  = request.getParameter("phone");
 		
 		String userLogin = request.getParameter("userLoginId");
-		String pass = request.getParameter("password");
+		String passUn = request.getParameter("password");
+		
+		String pass = logicalCode.passwordEncryption(passUn);
+		
 		int partyId=0;
 		
 		Party partyObj = new Party();
@@ -70,10 +75,28 @@ public class AddUser extends HttpServlet {
 		partyObj.setCountry(country);
 		partyObj.setPhone(phone);
 		
+		//create instance object of the SendEmail Class
+        SendEmail sm = new SendEmail();
+   		//get the 6-digit code
+        String code = sm.getRandom();
+		
 		UserLogin userlogin = new UserLogin();
 		userlogin.setPartyId(partyId);
 		userlogin.setUserLoginId(userLogin);
 		userlogin.setPassword(pass);
+		userlogin.setCode(code);
+        
+        //call the send email method
+        boolean test = sm.sendEmail(userlogin);
+        
+   		//check if the email send successfully
+        if(test){
+            HttpSession session  = request.getSession();
+            session.setAttribute("authcode", userlogin);
+            //response.sendRedirect("verify.jsp");
+        }else{
+   		 // out.println("Failed to send verification email");
+   	   }
 		
 		try {
 			logicalCode.insertUser(partyObj, userlogin);
@@ -85,7 +108,7 @@ public class AddUser extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("views/Login.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("views/Verify.jsp");
 		dispatcher.forward(request, response);
 	}
 

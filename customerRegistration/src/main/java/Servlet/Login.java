@@ -1,11 +1,14 @@
 package Servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +43,7 @@ public class Login extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
+		
 	}
 
 	/**
@@ -47,9 +51,12 @@ public class Login extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
-		
+		System.out.println("POSTCALLED");
+		PrintWriter out = response.getWriter();
 		String userLogin = request.getParameter("userLoginId");
-		String pass = request.getParameter("password");
+		String passUn = request.getParameter("password");
+		String pass = logicalCode.passwordEncryption(passUn);
+		String save = request.getParameter("remember-me");
 		
 		UserLogin userlogin = new UserLogin();
 		userlogin.setUserLoginId(userLogin);
@@ -57,10 +64,19 @@ public class Login extends HttpServlet {
 		
 		try {
 			if(logicalCode.loginUser(userlogin)) {
+				HttpSession session=request.getSession();  
+                session.setAttribute("USERID",userLogin);
+				if(save!=null)
+				{
+					Cookie ck = new Cookie("CustomerRegistration",userLogin);
+                    response.addCookie(ck);
+                    ck.setMaxAge(10000);
+				}
 				response.sendRedirect("views/Dashboard.jsp");
 			}
 			else {
-				//User not found code 
+				
+				//User not found 
 			}
 		} 
 		catch (SQLException e) {
