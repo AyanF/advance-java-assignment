@@ -1,5 +1,9 @@
 package DAO;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Properties;
 import java.util.Random;
 import javax.mail.Authenticator;
@@ -25,21 +29,30 @@ public class SendEmail {
         boolean test = false;
 
         String toEmail = user.getUserLoginId();
-        String fromEmail = "ayanfarooqui311@gmail.com";
-        String password = "clashofclans311";
+		
+//		  String fromEmail = ""; String password =
+//		  "";
+		 
 
         try {
-
-            // your host email smtpserver details
+        	
+        	Properties propCred = new Properties();
+        	propCred.load(new FileInputStream("/home/ayan/eclipse-workspace/customerRegistration/data.properties"));
+    		String fromEmail = propCred.getProperty("username");
+    		String password = propCred.getProperty("password");
+    		
+    		// your host email smtpserver details
             Properties pr = new Properties();
             pr.setProperty("mail.smtp.host", "smtp.gmail.com");
             pr.setProperty("mail.smtp.port", "465");
             pr.setProperty("mail.smtp.auth", "true");
             pr.setProperty("mail.smtp.ssl.enable", "true");
+			
 			/*
 			 * pr.put("mail.smtp.socketFactory.port", "25");
 			 * pr.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 			 */
+			 
  
             //get session to authenticate the host email address and password
             Session session = Session.getInstance(pr, new Authenticator() {
@@ -73,5 +86,6 @@ public class SendEmail {
 
         return test;
     }
+    
 }
 
