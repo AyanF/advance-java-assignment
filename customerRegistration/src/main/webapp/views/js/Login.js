@@ -1,19 +1,25 @@
 
 function validateform(){  
-	aler("function called");
-	console.log("js called");
-var name=document.login-form.userLoginId.value;  
-var password=document.login-form.password.value;  
 
 
+
+if(loginform.userLoginId.value==0)
+{
+	alert("Username can't be blank");
+	
+	return false;
+}
+
+if(loginform.password.value==0)
+{
+	alert("Password is required");
+	return false;
+}
+if(loginform.password.value!=0 && loginform.userLoginId.value!=0)
+{
+	return true;	
+}
   
-if (name==null || name==""){  
-  alert("Username can't be blank");  
-  return false;  
-}else if(password==""){  
-  alert("Password can't be blank'");  
-  return false;  
-  }  
 }
 
 

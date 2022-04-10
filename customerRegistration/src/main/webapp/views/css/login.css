@@ -12,9 +12,9 @@ body {
   border: 1px solid #9C9C9C;
   background-color: #EAEAEA;
 }
-#login .container #login-row #login-column #login-box #login-form {
+#login .container #login-row #login-column #login-box #loginform {
   padding: 20px;
 }
-#login .container #login-row #login-column #login-box #login-form #register-link {
+#login .container #login-row #login-column #login-box #loginform #register-link {
   margin-top: -85px;
 }
