@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@include file ="SecurityGuard.jsp" %>    
-<!DOCTYPE html>
+<!DOCTYPE html>+
 <html>
 <head>
 <meta charset="UTF-8">
@@ -66,7 +66,7 @@
     </tr>
 </tbody>
 </table>
-<div><a href='views/DestroySession.jsp'><button class='btn btn-primary'>Log Out</button></a></div>
+<div><a href="<%=request.getContextPath()%>/DestroySession"><button class='btn btn-primary'>Log Out</button></a></div>
 </div>
 
 </body>

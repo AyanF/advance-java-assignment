@@ -12,10 +12,10 @@ public class Party {
 	private String country; 
 	private String phone;
 	
-	public Party(String firstName, String lastName, String address, String city, String zip, String state,
+	public Party(int partyId,String firstName, String lastName, String address, String city, String zip, String state,
 			String country, String phone) {
 		super();
-		
+		this.partyId=partyId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.address = address;

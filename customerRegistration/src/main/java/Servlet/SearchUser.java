@@ -42,6 +42,7 @@ public class SearchUser extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		
 	}
 
 	/**
@@ -53,23 +54,29 @@ public class SearchUser extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
-		
 		Party partyObj = logicalCode.searchUser(firstName,lastName);
-		out.print("<table><tr><th>First Name</th><th>Last Name</th><th>Phone</th><th>City</th></tr>");
-		out.print("<tr><td>");
-		out.print(partyObj.getFirstName());
-		out.print("</td>");
-		out.print("<td>");
-		out.print(partyObj.getLastName());
-		out.print("</td>");
-		out.print("<td>");
-		out.print(partyObj.getPhone());
-		out.print("</td>");
-		out.print("<td>");
-		out.print(partyObj.getCity());
-		out.print("</td>");
-		out.print("</tr>");
-		out.print("</table>");
+		String fname = partyObj.getFirstName();
+		String lname = partyObj.getLastName();
+		String address= partyObj.getAddress();
+		String city = partyObj.getCity();
+		String phone = partyObj.getPhone();
+	
+	        request.setAttribute("fname", fname); 
+	        request.setAttribute("lname", lname); 
+	        request.setAttribute("addres", address); 
+	        request.setAttribute("city", city);
+	        request.setAttribute("phone", phone);
+	        request.getRequestDispatcher("views/Dashboard.jsp").forward(request, response);
+	    
+		/*
+		 * out.
+		 * print("<table><tr><th>First Name</th><th>Last Name</th><th>Phone</th><th>City</th></tr>"
+		 * ); out.print("<tr><td>"); out.print(partyObj.getFirstName());
+		 * out.print("</td>"); out.print("<td>"); out.print(partyObj.getLastName());
+		 * out.print("</td>"); out.print("<td>"); out.print(partyObj.getPhone());
+		 * out.print("</td>"); out.print("<td>"); out.print(partyObj.getCity());
+		 * out.print("</td>"); out.print("</tr>"); out.print("</table>");
+		 */
 		//System.out.println("Successful");
 	}
 
