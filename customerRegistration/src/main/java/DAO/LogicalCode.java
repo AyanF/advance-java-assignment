@@ -126,6 +126,7 @@ public class LogicalCode  {
 
 	public Party searchUser(String fname, String lname) {
 		
+		
 		Party partyObj =new Party();
 		try(Connection conn = connection.getConnection();
 				PreparedStatement st = conn.prepareStatement("SELECT firstName,lastName,address,city,zip,state,country,phone,partyId FROM party WHERE firstname=? AND lastname=?");
@@ -133,6 +134,45 @@ public class LogicalCode  {
 			st.setString(1, fname);
 			st.setString(2, lname);
 			ResultSet rs= st.executeQuery();
+			if(rs.next())
+			{
+				String fnameU = rs.getString(1);
+				String lnameU = rs.getString(2);
+				String addressU = rs.getString(3);
+				String cityU = rs.getString(4);
+				String zipU = rs.getString(5);
+				String stateU = rs.getString(6);
+				String countryU = rs.getString(7);
+				String phoneU = rs.getString(8);
+				int pId= rs.getInt(9);
+				partyObj = new Party(pId,fnameU,lnameU,addressU,cityU,zipU,stateU,countryU,phoneU);
+			}
+			else
+			{
+				partyObj=null;
+			}
+			}
+		catch(SQLException sqlE) {
+			sqlE.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return partyObj;
+		}
+	
+	public Party searchUser(String name) {
+		
+		System.out.println("method called");
+		Party partyObj =new Party();
+		try(Connection conn = connection.getConnection();
+				PreparedStatement st = conn.prepareStatement("SELECT firstName,lastName,address,city,zip,state,country,phone,partyId FROM party WHERE firstname LIKE '%"+name+"%' OR lastname LIKE '%"+name+"%'");
+				){
+			//st.setString(1, name);
+			//st.setString(2, name);
+			System.out.println(name);
+			ResultSet rs= st.executeQuery();
+			System.out.println(rs);
 			if(rs.next())
 			{
 				String fnameU = rs.getString(1);

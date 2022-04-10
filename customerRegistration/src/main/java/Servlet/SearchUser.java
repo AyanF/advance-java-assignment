@@ -54,7 +54,22 @@ public class SearchUser extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
-		Party partyObj = logicalCode.searchUser(firstName,lastName);
+		Party partyObj = new Party();
+		if(lastName!=null && firstName!=null)
+		{
+			partyObj = logicalCode.searchUser(firstName,lastName);
+			System.out.println("full called");
+		}
+		if(!firstName.isEmpty() && lastName.isEmpty())
+		{
+			partyObj = logicalCode.searchUser(firstName);
+			System.out.println("method called");
+		}
+		if(!lastName.isEmpty()&& firstName.isEmpty())
+		{
+			partyObj = logicalCode.searchUser(lastName);
+			System.out.println("lastname method called");
+		}
 		String fname = partyObj.getFirstName();
 		String lname = partyObj.getLastName();
 		String address= partyObj.getAddress();
@@ -77,7 +92,7 @@ public class SearchUser extends HttpServlet {
 		 * out.print("</td>"); out.print("<td>"); out.print(partyObj.getCity());
 		 * out.print("</td>"); out.print("</tr>"); out.print("</table>");
 		 */
-		//System.out.println("Successful");
+		
 	}
 
 }
