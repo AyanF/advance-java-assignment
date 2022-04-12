@@ -22,14 +22,14 @@ import DAO.LogicalCode;
 @WebServlet("/Login")
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	 LogicalCode logicalCode= new LogicalCode();
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public Login() {
-        super();
-    }
+	LogicalCode logicalCode= new LogicalCode();
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public Login() {
+		super();
+	}
 
 	/**
 	 * @see Servlet#init(ServletConfig)
@@ -43,7 +43,7 @@ public class Login extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		
+
 	}
 
 	/**
@@ -57,26 +57,27 @@ public class Login extends HttpServlet {
 		String passUn = request.getParameter("password");
 		String pass = logicalCode.passwordEncryption(passUn);
 		String save = request.getParameter("remember-me");
-		
+
 		UserLogin userlogin = new UserLogin();
 		userlogin.setUserLoginId(userLogin);
 		userlogin.setPassword(pass);
-		
+
 		try {
 			if(logicalCode.loginUser(userlogin)) {
 				HttpSession session=request.getSession();  
-                session.setAttribute("USERID",userLogin);
+				session.setAttribute("USERID",userLogin);
 				if(save!=null)
 				{
 					Cookie ck = new Cookie("CustomerRegistration",userLogin);
-                    response.addCookie(ck);
-                    ck.setMaxAge(10000);
+					response.addCookie(ck);
+					ck.setMaxAge(10000);
 				}
 				response.sendRedirect("views/Dashboard.jsp");
 			}
 			else {
-				
-				//User not found 
+
+				request.setAttribute("LOGIN","false");
+				request.getRequestDispatcher("/Login.jsp").forward(request, response); 
 			}
 		} 
 		catch (SQLException e) {
